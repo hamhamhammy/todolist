@@ -1,14 +1,29 @@
 {
   "name": "todolist",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "clean": "rimraf dist",
+    "db-init": "node server/database/init",
+    "db-seed": "node server/database/seed",
+    "db-clear": "node server/database/clear",
+    "dev": "NODE_ENV=development nodemon server/index --config nodemon.json",
+    "prod-build": "run-s clean && vue-cli-service build",
+    "prod-server": "NODE_ENV=production node server/index.js",
+    "prod-server-local": "NODE_ENV=production node server/index.js --local",
+    "prod-local": "run-s prod-build && NODE_ENV=production node server/index.js --local",
+    "prod": "run-s prod-build prod-server",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "chalk": "^3.0.0",
+    "cookie-parser": "^1.4.4",
     "core-js": "^3.6.4",
+    "express": "^4.17.1",
+    "express-status-monitor": "^1.2.9",
+    "lusca": "^1.6.1",
+    "sqlite3": "^4.1.1",
     "vue": "^2.6.11",
     "vue-router": "^3.1.5",
     "vuex": "^3.1.2"
@@ -23,7 +38,10 @@
     "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-vue": "^6.1.2",
     "node-sass": "^4.12.0",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
     "sass-loader": "^8.0.2",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.11",
+    "webpack-hot-middleware": "^2.25.0"
   }
 }

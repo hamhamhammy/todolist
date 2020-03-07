@@ -44,6 +44,8 @@ module.exports = {
       },
     ],
     'import/prefer-default-export': 0,
+    'max-classes-per-file': 0,
+    'arrow-parens': 0,
     camelcase: 0,
   },
   parserOptions: {
