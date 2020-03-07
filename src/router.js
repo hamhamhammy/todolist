@@ -1,12 +1,18 @@
 import VueRouter from 'vue-router';
 
 import Home from '@/views/Home';
+import CreateTodo from '@/views/CreateTodo';
 
 const routes = [
   {
     path: '/',
     name: 'home',
     component: Home,
+  },
+  {
+    path: '/create',
+    name: 'create',
+    component: CreateTodo,
   },
 ];
 

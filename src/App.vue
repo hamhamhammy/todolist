@@ -1,31 +1,67 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link>
+    <app-header class="app-header"/>
+    <div class="app-content">
+      <transition name="x-fade" mode="out-in" appear>
+        <router-view/>
+      </transition>
     </div>
-    <router-view/>
+    <app-footer class="app-footer"/>
   </div>
 </template>
 
+<script>
+import AppHeader from '@/components/AppHeader';
+import AppFooter from '@/components/AppFooter';
+
+export default {
+  name: 'app',
+  components: {
+    AppHeader,
+    AppFooter,
+  },
+};
+</script>
+
 <style lang="scss">
-  #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
+  @import "~@/styles/kit-overrides";
+  @import "~@/styles/kit/core";
+  @import "~@/styles/transitions";
+
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    color: inherit;
+    background-color: inherit;
   }
 
-  #nav {
-    padding: 30px;
+  #app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
 
-    a {
-      font-weight: bold;
-      color: #2c3e50;
+  .app-header {
+    flex: 0 0 auto;
+  }
 
-      &.router-link-exact-active {
-        color: #42b983;
-      }
-    }
+  .app-content {
+    flex: 1 1 auto;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+  }
+
+  .app-footer {
+    flex: 0 0 auto;
+  }
+
+  .input-select {
+    background-color: inherit;
+  }
+
+  .x-padded-container {
+    @include container;
+    @include padding-y(3, 6);
   }
 </style>
