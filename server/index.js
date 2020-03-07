@@ -20,7 +20,7 @@ const monitor = require('express-status-monitor');
 const lusca = require('lusca');
 const chalk = require('chalk');
 
-// const apiRouter = require('./api');
+const apiRouter = require('./api');
 
 const { NODE_ENV } = process.env;
 
@@ -59,7 +59,7 @@ app.use(lusca({
 app.use(express.static('dist', { index: false })); // Never send the raw index from /dist
 app.use(express.static('public', { index: false })); // Never send the raw index from /public
 
-// app.use('/api', apiRouter);
+app.use('/api', apiRouter);
 
 if (isDev) {
   webpackConfig.entry.app.unshift('webpack-hot-middleware/client');
