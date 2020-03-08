@@ -21,7 +21,7 @@
             :disabled-dates="disabledDays"
             :input-class="`input w-100 ${Boolean(errorDate) && 'error'}`"
             format="MMMM d yyyy"
-            placeholder="Select Due Date"/>
+            placeholder="Due Date"/>
         <div v-if="Boolean(errorDate)" class="input-error">
           {{ errorDate }}
         </div>
@@ -32,7 +32,7 @@
             :class="{ error: Boolean(errorContent) }"
             class="input-textarea w-100"
             rows="5"
-            placeholder="Type your content here..."/>
+            placeholder="Description"/>
         <div v-if="Boolean(errorContent)" class="input-error">
           {{ errorContent }}
         </div>
@@ -127,7 +127,8 @@ export default {
         await $axios.post('/api/todo/create', {
           author: this.author,
           content: this.content,
-          due_date: this.dueDate.toISOString().replace(/\d{2}:\d{2}:\d{2}/, '00:00:00'),
+          // eslint-disable-next-line max-len
+          due_date: new Date(this.dueDate.getTime() - (this.dueDate.getTimezoneOffset() * 60000)).toISOString(),
         });
         this.attemptedSubmission = false;
         this.createSuccess = true;

@@ -119,6 +119,16 @@ class BumperDatabaseManager extends DatabaseManager {
 
     return results;
   }
+
+  async fetchTodosByMonth ({ month, year }) {
+    const results = await this.all(
+      `SELECT rowid, * FROM todos WHERE due_date LIKE '${year}-${month}%' ORDER BY due_date ASC`,
+    );
+
+    log('fetchTodos count = ', results.length);
+
+    return results;
+  }
 }
 
 module.exports = {

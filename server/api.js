@@ -53,4 +53,20 @@ router.get('/todo/fetch', async (req, res) => {
   }
 });
 
+router.get('/todo/fetch-month', async (req, res) => {
+  log('api todo/fetch-month offset');
+
+  const manager = new BumperDatabaseManager();
+  const results = await manager.fetchTodosByMonth(req.query);
+  manager.close();
+
+  // TODO - add validation of things coming into this api
+
+  if (results) {
+    res.json({ results });
+  } else {
+    res.sendStatus(400);
+  }
+});
+
 module.exports = router;
