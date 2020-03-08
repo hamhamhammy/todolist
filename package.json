@@ -22,7 +22,6 @@
     "cookie-parser": "^1.4.4",
     "core-js": "^3.6.4",
     "date-fns": "^2.10.0",
-    "date-fns-tz": "^1.0.10",
     "express": "^4.17.1",
     "express-status-monitor": "^1.2.9",
     "lusca": "^1.6.1",

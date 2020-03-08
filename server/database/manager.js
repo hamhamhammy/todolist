@@ -89,7 +89,7 @@ class DatabaseManager {
   }
 }
 
-class BumperDatabaseManager extends DatabaseManager {
+class TodoDatabaseManager extends DatabaseManager {
   constructor () {
     super('./server/database/todolist.db'); // call the super class constructor and pass in the name parameter
   }
@@ -102,8 +102,24 @@ class BumperDatabaseManager extends DatabaseManager {
     return result;
   }
 
+  async updateTodo ({ rowid, author, content, due_date }) {
+    const result = await this.run(
+      `UPDATE todos
+      SET author = "${author}", content = "${content}", due_date = "${due_date}"
+      WHERE rowid = ${rowid}`,
+    );
+    return result;
+  }
+
+  async deleteTodo (rowid) {
+    await this.run(
+      `DELETE FROM todos WHERE rowid = ${rowid}`,
+    );
+    return rowid;
+  }
+
   async fetchTodos ({ limit, offset, author = '', content = '', due_date = '' }) {
-    const { query, values } = BumperDatabaseManager.whereFilter([
+    const { query, values } = TodoDatabaseManager.whereFilter([
       { column: 'author', value: author },
       { column: 'content', value: content },
       { column: 'due_date', value: due_date },
@@ -132,5 +148,5 @@ class BumperDatabaseManager extends DatabaseManager {
 }
 
 module.exports = {
-  BumperDatabaseManager,
+  TodoDatabaseManager,
 };

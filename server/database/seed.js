@@ -1,6 +1,6 @@
-const { BumperDatabaseManager } = require('./manager');
+const { TodoDatabaseManager } = require('./manager');
 
-const manager = new BumperDatabaseManager();
+const manager = new TodoDatabaseManager();
 
 const BASE_TODO_FIRST = {
   author: 'User7',

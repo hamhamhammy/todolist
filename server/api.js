@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { BumperDatabaseManager } = require('./database/manager');
+const { TodoDatabaseManager } = require('./database/manager');
 
 const router = express.Router();
 
@@ -14,7 +14,7 @@ router.post('/todo/create', async (req, res) => {
     due_date,
   } = req.body;
 
-  const manager = new BumperDatabaseManager();
+  const manager = new TodoDatabaseManager();
   const result = await manager.createTodo({
     author,
     content,
@@ -31,16 +31,54 @@ router.post('/todo/create', async (req, res) => {
   }
 });
 
-router.put('/todo/edit', async () => { // req, res
-  log('api todo/edit');
-  // TODO - build this api
+router.put('/todo/modify/:rowid', async (req, res) => {
+  const { rowid } = req.params;
+  const {
+    author,
+    content,
+    due_date,
+  } = req.body;
+  log('api todo/modify', rowid);
+
+  // TODO - add validation of things coming into this api
+
+  const manager = new TodoDatabaseManager();
+
+  try {
+    await manager.updateTodo({
+      rowid,
+      author,
+      content,
+      due_date,
+    });
+
+    manager.close();
+    res.sendStatus(204);
+  } catch (e) {
+    manager.close();
+    res.sendStatus(400);
+  }
+});
+
+router.delete('/todo/delete/:rowid', async (req, res) => {
+  const { rowid } = req.params;
+  log('api todo/delete', rowid);
+
+  const manager = new TodoDatabaseManager();
+  const id = await manager.deleteTodo(rowid);
+  manager.close();
+
+  if (id) {
+    res.json({ id });
+  } else {
+    res.sendStatus(400);
+  }
 });
 
 router.get('/todo/fetch', async (req, res) => {
-  const { offset } = req.query;
-  log('api todo/fetch offset', offset);
+  log('api todo/fetch');
 
-  const manager = new BumperDatabaseManager();
+  const manager = new TodoDatabaseManager();
   const results = await manager.fetchTodos(req.query);
   manager.close();
 
@@ -54,9 +92,9 @@ router.get('/todo/fetch', async (req, res) => {
 });
 
 router.get('/todo/fetch-month', async (req, res) => {
-  log('api todo/fetch-month offset');
+  log('api todo/fetch-month');
 
-  const manager = new BumperDatabaseManager();
+  const manager = new TodoDatabaseManager();
   const results = await manager.fetchTodosByMonth(req.query);
   manager.close();
 

@@ -1,150 +1,45 @@
 <template>
   <div class="x-padded-container d-flex jc-center">
-    <form class="FORM" @submit.prevent="submit">
+    <div class="FORM">
       <h1 class="h1 m-t-0">
         Create Todo
       </h1>
-      <div class="w-100 m-b-2">
-        <input
-            v-model="author"
-            :class="{ error: Boolean(errorAuthor) }"
-            class="input w-100"
-            type="text"
-            placeholder="Your Name"/>
-        <div v-if="Boolean(errorAuthor)" class="input-error">
-          {{ errorAuthor }}
-        </div>
+      <todo-form :clear="reset" @submit="submit"/>
+      <div v-if="success" class="input-success m-b-2">
+        Success :)
       </div>
-      <div class="w-100 m-b-2">
-        <date-picker
-            v-model="dueDate"
-            :disabled-dates="disabledDays"
-            :input-class="`input w-100 ${Boolean(errorDate) && 'error'}`"
-            format="MMMM d yyyy"
-            placeholder="Due Date"/>
-        <div v-if="Boolean(errorDate)" class="input-error">
-          {{ errorDate }}
-        </div>
+      <div v-if="fail" class="input-error m-b-2">
+        Failed :(
       </div>
-      <div class="w-100 m-b-2">
-        <textarea
-            v-model="content"
-            :class="{ error: Boolean(errorContent) }"
-            class="input-textarea w-100"
-            rows="5"
-            placeholder="Description"/>
-        <div v-if="Boolean(errorContent)" class="input-error">
-          {{ errorContent }}
-        </div>
-      </div>
-      <div v-if="createSuccess" class="input-success m-b-2">
-        Your todo has been created!
-      </div>
-      <button class="btn-proceed w-100" type="submit">
-        Create
-      </button>
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
-import DatePicker from 'vuejs-datepicker';
-
+import TodoForm from '@/components/TodoForm';
+import formMixin from '@/mixins/form';
 import $axios from '@/axios';
 
 export default {
   name: 'create',
+  mixins: [formMixin],
   components: {
-    DatePicker,
-  },
-  data () {
-    return {
-      author: '',
-      content: '',
-      dueDate: null,
-      attemptedSubmission: false,
-      createSuccess: false,
-      createFailed: false,
-    };
-  },
-  computed: {
-    hasError () {
-      return this.errorAuthor || this.errorDate || this.errorContent;
-    },
-    errorAuthor () {
-      if (!this.attemptedSubmission) {
-        return;
-      }
-
-      if (!this.author) {
-        return 'Please enter your name';
-      }
-
-      return '';
-    },
-    errorDate () {
-      if (!this.attemptedSubmission) {
-        return;
-      }
-
-      if (!this.dueDate) {
-        return 'Please enter a date';
-      }
-
-      return '';
-    },
-    errorContent () {
-      if (!this.attemptedSubmission) {
-        return;
-      }
-
-      if (!this.author) {
-        return 'Please enter your content';
-      }
-
-      return '';
-    },
-    disabledDays () {
-      const date = new Date();
-      date.setDate(date.getDate() - 1);
-
-      return {
-        to: date, // Disable dates before current date
-      };
-    },
+    TodoForm,
   },
   methods: {
-    async submit () {
-      this.createFailed = false;
-      this.createSuccess = false;
-      this.attemptedSubmission = true;
-
-      if (this.hasError) {
-        return;
-      }
+    async submit (data) {
+      this.preSubmit();
 
       try {
         await $axios.post('/api/todo/create', {
-          author: this.author,
-          content: this.content,
-          // eslint-disable-next-line max-len
-          due_date: new Date(this.dueDate.getTime() - (this.dueDate.getTimezoneOffset() * 60000)).toISOString(),
+          ...data,
+          due_date: this.formatDate(data.due_date),
         });
-        this.attemptedSubmission = false;
-        this.createSuccess = true;
-        setTimeout(() => {
-          this.createSuccess = false;
-        }, 3000);
-        this.reset();
+
+        this.onSuccess();
       } catch (err) {
-        this.createFailed = true;
-        console.log('Error creating todo, try again later'); // Replace this with proper error message
+        this.fail = true;
       }
-    },
-    reset () {
-      this.author = '';
-      this.dueDate = null;
-      this.content = '';
     },
   },
 };
@@ -156,9 +51,5 @@ export default {
   .FORM {
     @include responsive(width, 100%, 400px);
     display: inline-block;
-  }
-
-  .BUTTON {
-    margin: 0 auto;
   }
 </style>

@@ -19,9 +19,10 @@
           <div v-else-if="results.length" key="todos">
             <todo-item
                 v-for="result in results"
-                :key="result.rowId"
+                :key="result.rowid"
                 :item="result"
-                class="TODO-ITEM"/>
+                class="TODO-ITEM"
+                @click.native="activeItem = result"/>
           </div>
           <div v-else key="empty">
             No todos this month
@@ -29,13 +30,22 @@
         </transition>
       </div>
     </div>
+
+    <modal-todo
+        v-if="activeItem"
+        :item="activeItem"
+        @close="activeItem = null"
+        @modify="modifyItem"
+        @delete="deleteItem"/>
   </div>
 </template>
 
 <script>
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
+
 import DatePicker from 'vuejs-datepicker';
 
+import ModalTodo from '@/components/ModalTodo';
 import TodoItem from '@/components/TodoItem';
 import $axios from '@/axios';
 
@@ -43,6 +53,7 @@ export default {
   name: 'calendar',
   components: {
     DatePicker,
+    ModalTodo,
     TodoItem,
   },
   props: {
@@ -59,6 +70,7 @@ export default {
     return {
       loading: true,
       results: [],
+      activeItem: null,
     };
   },
   watch: {
@@ -89,11 +101,7 @@ export default {
         },
       });
 
-      this.results = results.map((result) => ({
-        ...result,
-        due_date: format(parseISO(result.due_date), 'MM/dd/yyyy'),
-      }));
-
+      this.results = results;
       this.loading = false;
     },
     choseDate (date) {
@@ -104,6 +112,15 @@ export default {
           year: date.getFullYear(),
         },
       });
+    },
+    modifyItem (todoItem) {
+      const index = this.results.findIndex(item => item.rowid === todoItem.rowid);
+      this.results[index] = todoItem;
+      this.results.sort((a, b) => new Date(a.due_date) - new Date(b.due_date));
+    },
+    deleteItem (rowid) {
+      const index = this.results.findIndex(item => item.rowid === rowid);
+      this.results.splice(index, 1);
     },
   },
 };
@@ -137,8 +154,19 @@ export default {
   }
 
   .TODO-ITEM {
-    & + & {
-      @include margin-top(2, 3)
+    width: 100%;
+
+    @include mobile-only {
+      & + & {
+        margin-top: $unit * 2;
+      }
+    }
+
+    @include tablet {
+      display: inline-block;
+      width: auto;
+      margin-right: $unit * 2;
+      margin-bottom: $unit * 2;
     }
   }
 </style>
