@@ -40,6 +40,7 @@ export default {
     display: flex;
     flex-direction: column;
     height: 100%;
+    color: $color-gray80;
   }
 
   .app-header {

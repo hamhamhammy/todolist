@@ -86,7 +86,8 @@ export default {
     background-color: white;
 
     max-height: 80%;
-    max-width: 80vw;
+    min-width: 70vw;
+    max-width: 90vw;
 
     @include tablet {
       max-height: 80vh;
@@ -97,11 +98,16 @@ export default {
 
   .MODAL-CLOSE {
     position: fixed;
-    top: 16px;
-    right: 16px;
+    top: $unit;
+    right: $unit;
     font-size: 32px;
     color: white;
     text-transform: uppercase;
     cursor: pointer;
+
+    @include tablet {
+      top: $unit * 2;
+      right: $unit * 2;
+    }
   }
 </style>

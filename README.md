@@ -6,7 +6,6 @@ mac/windows/linux
 Yarn, Node.js v8.14+
 ```
 
-<br>
 
 ## Running the application
 ### Ensure Yarn and Node.js are installed on your system
@@ -32,8 +31,6 @@ yarn prod-server-local
 yarn prod
 ```
 
-<br>
-
 ## Database
 
 ### Create the database
@@ -50,8 +47,6 @@ yarn db-seed
 ```
 yarn db-clear
 ```
-
-<br>
 
 ## Project setup
 
