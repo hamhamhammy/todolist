@@ -14,6 +14,7 @@
     <h1 class="t-size-hero m-b-2">Future</h1>
     <p>User accounts</p>
     <p>Serverside prefetch routes for data</p>
+    <p>More scalable database other than sqlite, also maybe GraphQL</p>
     <p>Vuex for central data store</p>
     <p>Searching and filtering of todo items</p>
     <p>Improved page designs and styles</p>
